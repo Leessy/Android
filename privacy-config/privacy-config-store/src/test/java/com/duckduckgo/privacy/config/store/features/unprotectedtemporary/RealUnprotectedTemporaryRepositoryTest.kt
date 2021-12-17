@@ -17,20 +17,22 @@
 package com.duckduckgo.privacy.config.store.features.unprotectedtemporary
 
 import com.duckduckgo.app.CoroutineTestRule
-import com.duckduckgo.app.runBlocking
 import com.duckduckgo.privacy.config.store.PrivacyConfigDatabase
 import com.duckduckgo.privacy.config.store.UnprotectedTemporaryEntity
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers
 
+@ExperimentalCoroutinesApi
 class RealUnprotectedTemporaryRepositoryTest {
 
     @get:Rule var coroutineRule = CoroutineTestRule()
@@ -61,7 +63,7 @@ class RealUnprotectedTemporaryRepositoryTest {
 
     @Test
     fun whenUpdateAllThenUpdateAllCalled() =
-        coroutineRule.runBlocking {
+        runTest {
             testee =
                 RealUnprotectedTemporaryRepository(
                     mockDatabase, TestCoroutineScope(), coroutineRule.testDispatcherProvider)
@@ -73,7 +75,7 @@ class RealUnprotectedTemporaryRepositoryTest {
 
     @Test
     fun whenUpdateAllThenPreviousExceptionsAreCleared() =
-        coroutineRule.runBlocking {
+        runTest {
             givenUnprotectedTemporaryDaoContainsExceptions()
             testee =
                 RealUnprotectedTemporaryRepository(

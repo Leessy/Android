@@ -17,7 +17,6 @@
 package com.duckduckgo.privacy.config.store.features.gpc
 
 import com.duckduckgo.app.CoroutineTestRule
-import com.duckduckgo.app.runBlocking
 import com.duckduckgo.privacy.config.store.GpcExceptionEntity
 import com.duckduckgo.privacy.config.store.PrivacyConfigDatabase
 import com.duckduckgo.privacy.config.store.toGpcException
@@ -25,13 +24,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyList
 
+@ExperimentalCoroutinesApi
 class RealGpcRepositoryTest {
     @get:Rule var coroutineRule = CoroutineTestRule()
 
@@ -68,7 +70,7 @@ class RealGpcRepositoryTest {
 
     @Test
     fun whenUpdateAllThenUpdateAllCalled() =
-        coroutineRule.runBlocking {
+        runTest {
             testee =
                 RealGpcRepository(
                     mockGpcDataStore,
@@ -83,7 +85,7 @@ class RealGpcRepositoryTest {
 
     @Test
     fun whenUpdateAllThenPreviousExceptionsAreCleared() =
-        coroutineRule.runBlocking {
+        runTest {
             givenGpcDaoContainsExceptions()
             testee =
                 RealGpcRepository(

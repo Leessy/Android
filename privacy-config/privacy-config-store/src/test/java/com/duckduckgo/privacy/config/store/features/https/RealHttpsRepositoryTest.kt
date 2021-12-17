@@ -17,7 +17,6 @@
 package com.duckduckgo.privacy.config.store.features.https
 
 import com.duckduckgo.app.CoroutineTestRule
-import com.duckduckgo.app.runBlocking
 import com.duckduckgo.privacy.config.store.HttpsExceptionEntity
 import com.duckduckgo.privacy.config.store.PrivacyConfigDatabase
 import com.duckduckgo.privacy.config.store.toHttpsException
@@ -25,13 +24,16 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers
 
+@ExperimentalCoroutinesApi
 class RealHttpsRepositoryTest {
 
     @get:Rule var coroutineRule = CoroutineTestRule()
@@ -62,7 +64,7 @@ class RealHttpsRepositoryTest {
 
     @Test
     fun whenUpdateAllThenUpdateAllCalled() =
-        coroutineRule.runBlocking {
+        runTest {
             testee =
                 RealHttpsRepository(
                     mockDatabase, TestCoroutineScope(), coroutineRule.testDispatcherProvider)
@@ -74,7 +76,7 @@ class RealHttpsRepositoryTest {
 
     @Test
     fun whenUpdateAllThenPreviousExceptionsAreCleared() =
-        coroutineRule.runBlocking {
+        runTest {
             givenHttpsDaoContainsExceptions()
             testee =
                 RealHttpsRepository(
